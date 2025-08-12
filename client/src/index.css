@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -38,8 +40,9 @@
   --sidebar-border: hsl(0, 0%, 90%);
   --sidebar-ring: hsl(0, 77%, 62%);
   --font-sans: 'Montserrat', sans-serif;
-  --font-serif: Georgia, serif;
+  --font-serif: 'Playfair Display', serif;
   --font-mono: Menlo, monospace;
+  --font-logo: 'Cormorant Garamond', serif;
   --radius: 0.5rem;
   --przmo-red: hsl(0, 77%, 62%);
   --przmo-black: hsl(0, 0%, 0%);
@@ -98,8 +101,10 @@
 
 @layer components {
   .przmo-logo {
-    font-weight: 900;
-    letter-spacing: -0.02em;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-style: normal;
   }
 
   .animate-fade-in {

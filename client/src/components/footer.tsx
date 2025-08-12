@@ -24,45 +24,45 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Featured */}
           <div>
-            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider">Featured</h4>
+            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider font-cormorant">Featured</h4>
             <ul className="space-y-3 text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">Air Force 1</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Air Max 270</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Air Max 90</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Blazer</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Air Force 1</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Air Max 270</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Air Max 90</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Blazer</a></li>
             </ul>
           </div>
 
           {/* Shoes */}
           <div>
-            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider">Shoes</h4>
+            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider font-cormorant">Shoes</h4>
             <ul className="space-y-3 text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">All Shoes</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Jordan</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Running</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Basketball</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">All Shoes</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Jordan</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Running</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Basketball</a></li>
             </ul>
           </div>
 
           {/* Clothing */}
           <div>
-            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider">Clothing</h4>
+            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider font-cormorant">Clothing</h4>
             <ul className="space-y-3 text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">All Clothing</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Tops</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Shorts</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Hoodies</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">All Clothing</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Tops</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Shorts</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Hoodies</a></li>
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider">Support</h4>
+            <h4 className="font-medium text-white mb-4 uppercase text-sm tracking-wider font-cormorant">Support</h4>
             <ul className="space-y-3 text-gray-300">
-              <li><a href="#" className="hover:text-white transition-colors">Get Help</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Order Status</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Returns</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Get Help</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Order Status</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Returns</a></li>
+              <li><a href="#" className="hover:text-white transition-colors font-sans">Contact Us</a></li>
             </ul>
           </div>
         </div>
@@ -95,12 +95,12 @@ export default function Footer() {
 
           {/* Copyright and Links */}
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 text-gray-400 text-sm">
-            <p>© 2024 PRZMO, Inc. All Rights Reserved</p>
+            <p className="font-sans">© 2024 PRZMO, Inc. All Rights Reserved</p>
             <div className="flex space-x-6">
-              <a href="#" className="hover:text-white transition-colors">Guides</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Sale</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Use</a>
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors font-sans">Guides</a>
+              <a href="#" className="hover:text-white transition-colors font-sans">Terms of Sale</a>
+              <a href="#" className="hover:text-white transition-colors font-sans">Terms of Use</a>
+              <a href="#" className="hover:text-white transition-colors font-sans">Privacy Policy</a>
             </div>
           </div>
         </div>

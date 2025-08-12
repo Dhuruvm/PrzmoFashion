@@ -12,8 +12,8 @@ export default function BrandStory() {
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-8 left-8 text-white">
-              <h3 className="text-3xl font-black mb-4">Men's</h3>
-              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors">
+              <h3 className="text-3xl font-playfair font-bold mb-4">Men's</h3>
+              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors font-sans">
                 Shop Men's
               </button>
             </div>
@@ -27,8 +27,8 @@ export default function BrandStory() {
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-8 left-8 text-white">
-              <h3 className="text-3xl font-black mb-4">Women's</h3>
-              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors">
+              <h3 className="text-3xl font-playfair font-bold mb-4">Women's</h3>
+              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors font-sans">
                 Shop Women's
               </button>
             </div>
@@ -43,9 +43,9 @@ export default function BrandStory() {
             className="w-full h-full object-cover"
           />
           <div className="absolute bottom-8 left-8 text-white">
-            <h3 className="text-4xl font-black mb-2">Kids</h3>
-            <p className="text-lg mb-4">Gear designed for the next generation</p>
-            <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors">
+            <h3 className="text-4xl font-playfair font-bold mb-2">Kids</h3>
+            <p className="text-lg mb-4 font-cormorant">Gear designed for the next generation</p>
+            <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors font-sans">
               Shop Kids
             </button>
           </div>
@@ -53,10 +53,10 @@ export default function BrandStory() {
 
         {/* Simple Text Section */}
         <div className="text-center py-16">
-          <h2 className="text-3xl font-black text-black mb-6">
+          <h2 className="text-4xl font-playfair font-bold text-black mb-6">
             Movement is Life
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-cormorant">
             From the track to the street, PRZMO delivers performance-driven athletic wear 
             that moves with you. Every piece is crafted for those who refuse to slow down.
           </p>

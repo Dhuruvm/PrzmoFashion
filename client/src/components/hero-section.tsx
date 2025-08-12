@@ -15,18 +15,18 @@ export default function HeroSection() {
         
         {/* Content Overlay - Bottom Left */}
         <div className="absolute bottom-12 left-8 md:left-16 text-white max-w-md">
-          <p className="text-lg font-medium mb-2">PRZMO Running</p>
-          <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4 tracking-tight">
+          <p className="text-lg font-medium mb-2 font-cormorant tracking-wide">PRZMO Running</p>
+          <h1 className="text-4xl md:text-6xl font-playfair font-bold leading-tight mb-4 tracking-tight">
             MORE CHOICE.
             <br />
             MORE RUNNING.
           </h1>
-          <p className="text-lg mb-6 leading-relaxed opacity-90">
-            Pegasus. Vomero. Structure. Three updated
+          <p className="text-lg mb-6 leading-relaxed opacity-90 font-cormorant">
+            Pegasus. Vomero. Structure. Three updated classics reimagined for the modern athlete.
           </p>
           <button 
             onClick={scrollToDrops}
-            className="bg-white text-black px-6 py-3 font-medium text-sm hover:bg-gray-100 transition-colors duration-200"
+            className="bg-white text-black px-6 py-3 font-medium text-sm hover:bg-gray-100 transition-colors duration-200 font-sans"
           >
             Shop Now
           </button>

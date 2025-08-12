@@ -67,7 +67,7 @@ export default function DropsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header - Nike Style */}
         <div className="mb-8">
-          <h2 className="text-2xl font-medium text-black mb-2">
+          <h2 className="text-3xl font-playfair font-semibold text-black mb-2">
             Featured
           </h2>
         </div>
@@ -88,25 +88,25 @@ export default function DropsSection() {
               {/* Product Info */}
               <div className="space-y-1">
                 {/* Product Name */}
-                <h3 className="text-black font-medium">
+                <h3 className="text-black font-playfair font-medium">
                   {product.name}
                 </h3>
                 
                 {/* Category */}
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm font-cormorant">
                   {product.description}
                 </p>
 
                 {/* Colors Count */}
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm font-sans">
                   {product.colors.length} Color{product.colors.length > 1 ? 's' : ''}
                 </p>
 
                 {/* Price */}
                 <div className="flex items-center space-x-2 pt-1">
-                  <span className="text-black font-medium">{product.price}</span>
+                  <span className="text-black font-medium font-sans">{product.price}</span>
                   {product.originalPrice && (
-                    <span className="text-gray-500 line-through text-sm">{product.originalPrice}</span>
+                    <span className="text-gray-500 line-through text-sm font-sans">{product.originalPrice}</span>
                   )}
                 </div>
               </div>
@@ -116,7 +116,7 @@ export default function DropsSection() {
 
         {/* More Products Grid */}
         <div className="mt-16">
-          <h2 className="text-2xl font-medium text-black mb-8">
+          <h2 className="text-3xl font-playfair font-semibold text-black mb-8">
             Don't Miss
           </h2>
           
@@ -128,12 +128,12 @@ export default function DropsSection() {
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-8 left-8 text-white">
-              <h3 className="text-3xl md:text-5xl font-black mb-4">
+              <h3 className="text-3xl md:text-5xl font-playfair font-bold mb-4 leading-tight">
                 TRAIN LIKE
                 <br />
                 A CHAMPION
               </h3>
-              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors">
+              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors font-sans">
                 Shop Training
               </button>
             </div>

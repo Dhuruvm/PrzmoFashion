@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import przmoLogo from "@/assets/przmo-logo.png";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,8 +23,12 @@ export default function Navigation() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <a href="#" className="przmo-logo text-2xl font-black text-black">
-                PRZMO
+              <a href="#" className="flex items-center">
+                <img 
+                  src={przmoLogo} 
+                  alt="PRZMO" 
+                  className="h-8 w-auto"
+                />
               </a>
             </div>
 

@@ -70,6 +70,9 @@ export default {
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
         montserrat: ["Montserrat", "sans-serif"],
+        logo: ["var(--font-logo)"],
+        playfair: ["Playfair Display", "serif"],
+        cormorant: ["Cormorant Garamond", "serif"],
       },
       keyframes: {
         "accordion-down": {
