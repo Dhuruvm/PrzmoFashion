@@ -63,136 +63,81 @@ export default function DropsSection() {
   };
 
   return (
-    <section id="drops" className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section id="drops" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-20 animate-slide-up">
-          <div className="inline-block">
-            <h2 className="text-5xl md:text-6xl font-black text-black mb-6 tracking-tight bg-gradient-to-r from-black to-gray-600 bg-clip-text">
-              Latest Drop
-            </h2>
-            <div className="w-24 h-1 bg-przmo-red mx-auto mb-6"></div>
-          </div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Cutting-edge athletic wear designed for the next generation of athletes. 
-            <span className="text-przmo-red font-semibold"> Limited quantities available.</span>
-          </p>
+        {/* Section Header - Nike Style */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-medium text-black mb-2">
+            Featured
+          </h2>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {/* Product Grid - Nike Style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((product) => (
-            <div key={product.id} className="group relative animate-slide-up">
-              {/* Product Card */}
-              <div className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 group-hover:border-gray-200">
+            <div key={product.id} className="group cursor-pointer">
+              {/* Product Image */}
+              <div className="relative w-full aspect-square mb-4 bg-gray-100">
+                <img
+                  src={product.image}
+                  alt={product.alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Product Info */}
+              <div className="space-y-1">
+                {/* Product Name */}
+                <h3 className="text-black font-medium">
+                  {product.name}
+                </h3>
                 
-                {/* Badge */}
-                {product.badge && (
-                  <div className="absolute top-4 left-4 z-20">
-                    <span className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full text-white ${
-                      product.badge === 'NEW' ? 'bg-green-500' :
-                      product.badge === 'BESTSELLER' ? 'bg-purple-500' :
-                      'bg-orange-500'
-                    }`}>
-                      {product.badge}
-                    </span>
-                  </div>
-                )}
+                {/* Category */}
+                <p className="text-gray-500 text-sm">
+                  {product.description}
+                </p>
 
-                {/* Favorite Button */}
-                <button
-                  onClick={() => toggleFavorite(product.id)}
-                  className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-                >
-                  <Heart 
-                    className={`w-5 h-5 transition-colors duration-300 ${
-                      favorites.includes(product.id) 
-                        ? 'text-przmo-red fill-current' 
-                        : 'text-gray-400 hover:text-przmo-red'
-                    }`}
-                  />
-                </button>
+                {/* Colors Count */}
+                <p className="text-gray-500 text-sm">
+                  {product.colors.length} Color{product.colors.length > 1 ? 's' : ''}
+                </p>
 
-                {/* Image Container */}
-                <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                  <img
-                    src={product.image}
-                    alt={product.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  
-                  {/* Hover Actions */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center space-x-4">
-                    <button className="bg-white text-black p-3 rounded-full hover:bg-przmo-red hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
-                      <Eye className="w-5 h-5" />
-                    </button>
-                    <button className="bg-przmo-red text-white p-3 rounded-full hover:bg-red-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
-                      <ShoppingBag className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-6">
-                  {/* Rating */}
-                  <div className="flex items-center space-x-2 mb-3">
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-semibold text-gray-800">{product.rating}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">(247 reviews)</span>
-                  </div>
-
-                  {/* Product Name */}
-                  <h3 className="text-xl font-bold text-black mb-2 group-hover:text-przmo-red transition-colors duration-300">
-                    {product.name}
-                  </h3>
-                  
-                  {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    {product.description}
-                  </p>
-
-                  {/* Colors */}
-                  <div className="flex items-center space-x-2 mb-4">
-                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Colors:</span>
-                    <div className="flex space-x-2">
-                      {product.colors.map((color, index) => (
-                        <button
-                          key={index}
-                          className="w-6 h-6 rounded-full border-2 border-gray-300 hover:border-gray-400 transition-colors duration-200"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-2xl font-black text-black">{product.price}</span>
-                      {product.originalPrice && (
-                        <span className="text-lg text-gray-400 line-through">{product.originalPrice}</span>
-                      )}
-                    </div>
-                    {product.originalPrice && (
-                      <div className="bg-green-100 text-green-800 px-2 py-1 rounded-lg text-xs font-semibold">
-                        SAVE {Math.round(((parseInt(product.originalPrice.slice(1)) - parseInt(product.price.slice(1))) / parseInt(product.originalPrice.slice(1))) * 100)}%
-                      </div>
-                    )}
-                  </div>
+                {/* Price */}
+                <div className="flex items-center space-x-2 pt-1">
+                  <span className="text-black font-medium">{product.price}</span>
+                  {product.originalPrice && (
+                    <span className="text-gray-500 line-through text-sm">{product.originalPrice}</span>
+                  )}
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="text-center">
-          <button className="group relative inline-flex items-center space-x-3 bg-gradient-to-r from-black to-gray-800 text-white px-10 py-4 rounded-full font-bold uppercase tracking-wider hover:from-przmo-red hover:to-red-600 transition-all duration-500 transform hover:scale-105 shadow-xl hover:shadow-2xl">
-            <span>Explore All Drops</span>
-            <ShoppingBag className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-          </button>
+        {/* More Products Grid */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-medium text-black mb-8">
+            Don't Miss
+          </h2>
+          
+          {/* Large Feature Product */}
+          <div className="relative w-full h-96 md:h-[500px] mb-8">
+            <img
+              src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+              alt="Athletic training gear"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute bottom-8 left-8 text-white">
+              <h3 className="text-3xl md:text-5xl font-black mb-4">
+                TRAIN LIKE
+                <br />
+                A CHAMPION
+              </h3>
+              <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition-colors">
+                Shop Training
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
