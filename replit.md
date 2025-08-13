@@ -2,7 +2,7 @@
 
 ## Overview
 
-PRZMO is a modern athletic lifestyle e-commerce platform built with React and Express.js. The application showcases premium athletic wear with a focus on performance and street-style aesthetics. The platform features a sleek landing page with product displays, brand storytelling, and newsletter subscription functionality. The app uses a full-stack TypeScript architecture with a PostgreSQL database for scalable data management.
+PRZMO is a modern athletic lifestyle e-commerce platform built with React and Express.js. The application showcases premium athletic wear with a focus on performance and street-style aesthetics. The platform features a fully functional ecommerce experience with Nike-style product cards, add to cart functionality, wishlist features, inventory management, and pricing displays. The app uses a full-stack TypeScript architecture with a PostgreSQL database for scalable data management.
 
 ## User Preferences
 
@@ -47,6 +47,8 @@ Preferred communication style: Simple, everyday language.
 ### Component Architecture
 - **Atomic design principles** with reusable UI components
 - **Feature-based organization** with separate components for hero, navigation, products, and brand story
+- **Ecommerce functionality** including cart management, wishlist, inventory tracking, and product interactions
+- **Nike-style product grid** with double card layout, hover effects, and professional styling
 - **Custom hooks** for mobile detection and toast notifications
 - **Form handling** with React Hook Form and Zod resolvers
 

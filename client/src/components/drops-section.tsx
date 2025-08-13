@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { ShoppingBag, Heart } from "lucide-react";
 
 interface Product {
   id: number;
   name: string;
   description: string;
   price: string;
+  originalPrice?: string;
   image: string;
   alt: string;
   colors: number;
+  inStock: boolean;
+  sizes: string[];
 }
 
 export default function DropsSection() {
@@ -17,9 +21,12 @@ export default function DropsSection() {
       name: "PRZMO Sportswear Chill Poplin",
       description: "Women's Striped Boxy Top",
       price: "₹ 2,995.00",
+      originalPrice: "₹ 3,495.00",
       image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
       alt: "PRZMO Women's striped boxy top",
-      colors: 2
+      colors: 2,
+      inStock: true,
+      sizes: ["XS", "S", "M", "L", "XL"]
     },
     {
       id: 2,
@@ -28,7 +35,9 @@ export default function DropsSection() {
       price: "₹ 2,195.00",
       image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
       alt: "PRZMO Women's black t-shirt",
-      colors: 3
+      colors: 3,
+      inStock: true,
+      sizes: ["XS", "S", "M", "L", "XL"]
     },
     {
       id: 3,
@@ -37,58 +46,57 @@ export default function DropsSection() {
       price: "₹ 3,495.00",
       image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
       alt: "PRZMO Performance hoodie",
-      colors: 3
+      colors: 3,
+      inStock: true,
+      sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
       id: 4,
       name: "PRZMO Training Shorts",
       description: "Men's Athletic Shorts",
       price: "₹ 1,795.00",
+      originalPrice: "₹ 2,295.00",
       image: "https://images.unsplash.com/photo-1506629905607-d405b8fc7aab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
       alt: "PRZMO Training shorts",
-      colors: 3
+      colors: 3,
+      inStock: false,
+      sizes: ["S", "M", "L", "XL"]
     }
   ]);
+
+  const [cart, setCart] = useState<{id: number, quantity: number, size: string}[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
+
+  const addToCart = (productId: number, size: string = "M") => {
+    setCart(prev => {
+      const existing = prev.find(item => item.id === productId && item.size === size);
+      if (existing) {
+        return prev.map(item => 
+          item.id === productId && item.size === size 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, { id: productId, quantity: 1, size }];
+    });
+  };
+
+  const toggleFavorite = (productId: number) => {
+    setFavorites(prev => 
+      prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
 
   return (
     <section id="drops" className="py-8 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb Navigation */}
-        <div className="text-sm text-gray-600 mb-4">
-          <span>New Releases</span> / <span>Clothing</span> / <span className="text-black">Tops & T-Shirts</span>
-        </div>
-
-        {/* Section Header - Nike Style */}
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-xl md:text-2xl font-medium text-black mb-4">
-            New Tops & T-Shirts
+        {/* Section Header - Simple */}
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-black">
+            Drops
           </h1>
-          
-          {/* Category Filters */}
-          <div className="flex gap-4 md:gap-8 mb-4 overflow-x-auto">
-            <button className="text-sm md:text-base font-medium text-black border-b-2 border-black pb-1 whitespace-nowrap">
-              Graphic T-Shirts
-            </button>
-            <button className="text-sm md:text-base text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-              Long Sleeve Shirts
-            </button>
-            <button className="text-sm md:text-base text-gray-600 hover:text-black transition-colors whitespace-nowrap">
-              Short Sleeve
-            </button>
-          </div>
-
-          {/* Results and Filter */}
-          <div className="flex items-center justify-between">
-            <p className="text-gray-600 text-sm md:text-base">
-              {products.length} Results
-            </p>
-            <button className="flex items-center gap-2 text-sm md:text-base font-medium text-black hover:text-gray-600 transition-colors border border-gray-300 px-4 py-2 rounded-full" data-testid="button-filter">
-              Filter
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-              </svg>
-            </button>
-          </div>
         </div>
 
         {/* Product Grid - Nike Double Card Style */}
@@ -96,7 +104,7 @@ export default function DropsSection() {
           {products.map((product) => (
             <div key={product.id} className="group cursor-pointer" data-testid={`product-card-${product.id}`}>
               {/* Product Image */}
-              <div className="relative w-full aspect-square mb-2 md:mb-3 overflow-hidden bg-gray-50">
+              <div className="relative w-full aspect-square mb-2 md:mb-3 overflow-hidden bg-gray-50 group">
                 <img
                   src={product.image}
                   alt={product.alt}
@@ -104,11 +112,49 @@ export default function DropsSection() {
                   data-testid={`product-image-${product.id}`}
                 />
                 
-                {/* Just In Badge */}
-                <div className="absolute bottom-2 left-2 md:bottom-4 md:left-4">
-                  <span className="text-orange-600 text-xs md:text-sm font-medium">
+                {/* Badges and Actions */}
+                <div className="absolute top-2 left-2 md:top-4 md:left-4">
+                  <span className="text-orange-600 text-xs md:text-sm font-medium bg-white/90 px-2 py-1 rounded">
                     Just In
                   </span>
+                </div>
+
+                {/* Stock Status */}
+                {!product.inStock && (
+                  <div className="absolute top-2 right-2 md:top-4 md:right-4">
+                    <span className="text-red-600 text-xs md:text-sm font-medium bg-white/90 px-2 py-1 rounded">
+                      Sold Out
+                    </span>
+                  </div>
+                )}
+
+                {/* Quick Actions - Show on Hover */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (product.inStock) addToCart(product.id);
+                    }}
+                    disabled={!product.inStock}
+                    className="bg-white text-black p-2 md:p-3 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid={`add-to-cart-${product.id}`}
+                  >
+                    <ShoppingBag className="w-4 h-4 md:w-5 md:h-5" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleFavorite(product.id);
+                    }}
+                    className={`p-2 md:p-3 rounded-full transition-colors ${
+                      favorites.includes(product.id)
+                        ? 'bg-red-500 text-white'
+                        : 'bg-white text-black hover:bg-gray-100'
+                    }`}
+                    data-testid={`favorite-${product.id}`}
+                  >
+                    <Heart className={`w-4 h-4 md:w-5 md:h-5 ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
               </div>
 
@@ -130,9 +176,23 @@ export default function DropsSection() {
                 </p>
 
                 {/* Price */}
-                <div className="pt-1 md:pt-2">
+                <div className="pt-1 md:pt-2 flex items-center gap-2">
                   <span className="text-black font-medium text-sm md:text-base" data-testid={`product-price-${product.id}`}>
                     MRP : {product.price}
+                  </span>
+                  {product.originalPrice && (
+                    <span className="text-gray-500 text-xs md:text-sm line-through">
+                      {product.originalPrice}
+                    </span>
+                  )}
+                </div>
+
+                {/* Stock Status */}
+                <div className="pt-1">
+                  <span className={`text-xs md:text-sm font-medium ${
+                    product.inStock ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {product.inStock ? 'In Stock' : 'Sold Out'}
                   </span>
                 </div>
               </div>
