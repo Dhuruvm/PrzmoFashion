@@ -31,7 +31,7 @@ export default function Navigation() {
                 <img 
                   src={przmoLogo} 
                   alt="PRZMO Athletic Lifestyle" 
-                  className="h-12 w-auto md:h-14 lg:h-16 filter brightness-0 contrast-200 hover:brightness-25 transition-all duration-200"
+                  className="h-12 w-auto md:h-14 lg:h-16 object-contain hover:opacity-80 transition-all duration-200"
                 />
               </a>
             </div>
