@@ -1,18 +1,8 @@
-import { useState } from "react";
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  size: string;
-  color: string;
-  quantity: number;
-  image: string;
-}
+import { useCart } from "./cart-context";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -20,33 +10,10 @@ interface CartDrawerProps {
 }
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  // Mock cart items for demonstration
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: "1",
-      name: "PRZMO Performance Hoodie",
-      price: 89.99,
-      size: "M",
-      color: "Black",
-      quantity: 1,
-      image: "/api/placeholder/100/100"
-    }
-  ]);
+  const { items: cartItems, updateQuantity, getTotalPrice } = useCart();
 
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity === 0) {
-      setCartItems(items => items.filter(item => item.id !== id));
-    } else {
-      setCartItems(items =>
-        items.map(item =>
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    }
-  };
-
-  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const shipping = subtotal > 100 ? 0 : 9.99;
+  const subtotal = getTotalPrice();
+  const shipping = subtotal > 100 ? 0 : 15;
   const total = subtotal + shipping;
 
   const handleCheckout = () => {
@@ -92,11 +59,13 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           ) : (
             <div className="space-y-6">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex gap-4 py-4 border-b border-gray-100">
+                <div key={`${item.id}-${item.size}`} className="flex gap-4 py-4 border-b border-gray-100">
                   <div className="w-20 h-20 bg-gray-100 rounded flex-shrink-0">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 rounded flex items-center justify-center">
-                      <span className="text-xs text-gray-500">IMG</span>
-                    </div>
+                    <img 
+                      src={item.image} 
+                      alt={item.name}
+                      className="w-full h-full object-cover rounded"
+                    />
                   </div>
                   
                   <div className="flex-1">
@@ -104,14 +73,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       {item.name}
                     </h4>
                     <div className="text-sm text-gray-500 mb-2">
-                      {item.color} • Size {item.size}
+                      Size {item.size}
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)}
                           className="w-8 h-8 p-0 rounded-none border-gray-300"
                           data-testid={`button-decrease-quantity-${item.id}`}
                         >
@@ -123,7 +92,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
                           className="w-8 h-8 p-0 rounded-none border-gray-300"
                           data-testid={`button-increase-quantity-${item.id}`}
                         >
@@ -131,7 +100,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </Button>
                       </div>
                       <div className="font-bold text-black" data-testid={`text-item-price-${item.id}`}>
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {item.price}
                       </div>
                     </div>
                   </div>
@@ -146,22 +115,22 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="font-medium" data-testid="text-subtotal">${subtotal.toFixed(2)}</span>
+                <span className="font-medium" data-testid="text-subtotal">₹{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Shipping</span>
+                <span className="text-gray-600">Shipping (COD)</span>
                 <span className="font-medium" data-testid="text-shipping">
-                  {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                  {shipping === 0 ? "Free" : `₹${shipping.toFixed(2)}`}
                 </span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span data-testid="text-total">${total.toFixed(2)}</span>
+                <span data-testid="text-total">₹{total.toFixed(2)}</span>
               </div>
               {subtotal < 100 && (
                 <p className="text-xs text-gray-500 text-center">
-                  Free shipping on orders over $100
+                  Free shipping on orders over ₹2500
                 </p>
               )}
             </div>
@@ -171,7 +140,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               className="w-full h-12 bg-przmo-red hover:bg-red-600 text-white font-bold uppercase tracking-wider rounded-none transition-colors"
               data-testid="button-checkout"
             >
-              Checkout - ${total.toFixed(2)}
+              Checkout - ₹{total.toFixed(2)}
             </Button>
           </div>
         )}

@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { ShoppingBag, Heart } from "lucide-react";
+import { ShoppingBag, Heart, Plus } from "lucide-react";
 import OrderModal from "./order-modal";
+import { useCart } from "./cart-context";
+import { Button } from "@/components/ui/button";
 
 interface Product {
   id: number;
@@ -70,6 +72,7 @@ export default function DropsSection() {
     isOpen: false,
     product: null
   });
+  const { addToCart } = useCart();
 
   const openOrderModal = (product: Product) => {
     setOrderModal({ isOpen: true, product });
@@ -77,6 +80,14 @@ export default function DropsSection() {
 
   const closeOrderModal = () => {
     setOrderModal({ isOpen: false, product: null });
+  };
+
+  const handleQuickAddToCart = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (product.inStock) {
+      addToCart(product, "M"); // Default size M for quick add
+    }
   };
 
   const toggleFavorite = (productId: number) => {
@@ -188,13 +199,58 @@ export default function DropsSection() {
                   )}
                 </div>
 
-                {/* Stock Status */}
-                <div className="pt-1">
-                  <span className={`text-xs md:text-sm font-medium ${
-                    product.inStock ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {product.inStock ? 'In Stock' : 'Sold Out'}
-                  </span>
+                {/* Stock Status & Action Buttons */}
+                <div className="pt-2 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs md:text-sm font-medium ${
+                      product.inStock ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {product.inStock ? 'In Stock' : 'Sold Out'}
+                    </span>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={(e) => handleQuickAddToCart(product, e)}
+                      disabled={!product.inStock}
+                      size="sm"
+                      className="flex-1 bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed h-8 text-xs"
+                      data-testid={`quick-add-cart-${product.id}`}
+                    >
+                      <Plus className="w-3 h-3 mr-1" />
+                      Quick Add
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (product.inStock) openOrderModal(product);
+                      }}
+                      disabled={!product.inStock}
+                      variant="outline"
+                      size="sm"
+                      className="px-3 h-8 border-black text-black hover:bg-black hover:text-white disabled:opacity-50"
+                      data-testid={`order-modal-${product.id}`}
+                    >
+                      <ShoppingBag className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleFavorite(product.id);
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className={`px-3 h-8 ${
+                        favorites.includes(product.id)
+                          ? 'bg-red-500 border-red-500 text-white hover:bg-red-600'
+                          : 'border-gray-300 text-gray-600 hover:border-red-500 hover:text-red-500'
+                      }`}
+                      data-testid={`favorite-toggle-${product.id}`}
+                    >
+                      <Heart className={`w-3 h-3 ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

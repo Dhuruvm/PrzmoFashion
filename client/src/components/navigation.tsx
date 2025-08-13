@@ -3,12 +3,14 @@ import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
 import przmoLogo from "@assets/PRZMO_20250812_222429_0000_1755021196697.png";
 import SearchModal from "./search-modal";
 import CartDrawer from "./cart-drawer";
+import { useCart } from "./cart-context";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { getTotalItems } = useCart();
 
   const handleCollectionsClick = () => {
     setIsComingSoonModalOpen(true);
@@ -77,9 +79,11 @@ export default function Navigation() {
                 aria-label="Shopping cart"
               >
                 <ShoppingBag className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 bg-przmo-red text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                  1
-                </span>
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-przmo-red text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                    {getTotalItems()}
+                  </span>
+                )}
               </button>
             </div>
 
@@ -100,9 +104,11 @@ export default function Navigation() {
                 aria-label="Shopping cart"
               >
                 <ShoppingBag className="w-5 h-5" />
-                <span className="absolute -top-0 -right-0 bg-przmo-red text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium text-[10px]">
-                  1
-                </span>
+                {getTotalItems() > 0 && (
+                  <span className="absolute -top-0 -right-0 bg-przmo-red text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium text-[10px]">
+                    {getTotalItems()}
+                  </span>
+                )}
               </button>
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
