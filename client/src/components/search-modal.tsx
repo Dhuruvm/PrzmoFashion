@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Search, X } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -29,7 +29,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[600px] p-0">
         <DialogHeader className="sr-only">
-          <h2>Search Products</h2>
+          <DialogTitle>Search Products</DialogTitle>
+          <DialogDescription>Search through our product catalog</DialogDescription>
         </DialogHeader>
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
