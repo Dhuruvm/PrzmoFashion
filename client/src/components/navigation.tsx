@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import przmoLogo from "@/assets/przmo-logo.png";
+import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
+import przmoLogo from "@assets/PRZMO_20250812_222429_0000_1755021196697.png";
+import SearchModal from "./search-modal";
+import CartDrawer from "./cart-drawer";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isComingSoonModalOpen, setIsComingSoonModalOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleCollectionsClick = () => {
     setIsComingSoonModalOpen(true);
@@ -36,77 +40,77 @@ export default function Navigation() {
             <div className="hidden md:flex items-center space-x-8">
               <button
                 onClick={scrollToDrops}
-                className="text-black font-medium hover:text-gray-600 transition-colors duration-200"
+                className="text-black font-semibold hover:text-przmo-red transition-colors duration-200 uppercase tracking-wide"
+                data-testid="link-drops"
               >
                 Drops
-              </button>
-              <button
-                onClick={handleCollectionsClick}
-                className="text-black font-medium hover:text-gray-600 transition-colors duration-200"
-              >
-                Men
-              </button>
-              <button
-                onClick={handleCollectionsClick}
-                className="text-black font-medium hover:text-gray-600 transition-colors duration-200"
-              >
-                Women
-              </button>
-              <button
-                onClick={handleCollectionsClick}
-                className="text-black font-medium hover:text-gray-600 transition-colors duration-200"
-              >
-                Kids
-              </button>
-              <button
-                onClick={handleCollectionsClick}
-                className="text-black font-medium hover:text-gray-600 transition-colors duration-200"
-              >
-                Sale
               </button>
             </div>
 
             {/* Right Icons */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-2">
               {/* Search Icon */}
-              <button className="p-2 text-black hover:text-gray-600 transition-colors duration-200">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="p-3 text-black hover:text-przmo-red hover:bg-gray-50 rounded-full transition-all duration-200"
+                data-testid="button-open-search"
+                aria-label="Open search"
+              >
+                <Search className="w-5 h-5" />
               </button>
               
               {/* User Icon */}
-              <button className="p-2 text-black hover:text-gray-600 transition-colors duration-200">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+              <button 
+                onClick={handleCollectionsClick}
+                className="p-3 text-black hover:text-przmo-red hover:bg-gray-50 rounded-full transition-all duration-200"
+                data-testid="button-account"
+                aria-label="Account"
+              >
+                <User className="w-5 h-5" />
               </button>
               
               {/* Shopping Bag */}
-              <button className="p-2 text-black hover:text-gray-600 transition-colors duration-200">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z" />
-                </svg>
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="p-3 text-black hover:text-przmo-red hover:bg-gray-50 rounded-full transition-all duration-200 relative"
+                data-testid="button-open-cart"
+                aria-label="Shopping cart"
+              >
+                <ShoppingBag className="w-5 h-5" />
+                <span className="absolute -top-1 -right-1 bg-przmo-red text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                  1
+                </span>
               </button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center space-x-2">
-              <button className="p-2 text-black">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+            <div className="md:hidden flex items-center space-x-1">
+              <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 text-black hover:text-przmo-red transition-colors"
+                data-testid="button-mobile-search"
+                aria-label="Open search"
+              >
+                <Search className="w-5 h-5" />
               </button>
-              <button className="p-2 text-black">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z" />
-                </svg>
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="p-2 text-black hover:text-przmo-red transition-colors relative"
+                data-testid="button-mobile-cart"
+                aria-label="Shopping cart"
+              >
+                <ShoppingBag className="w-5 h-5" />
+                <span className="absolute -top-0 -right-0 bg-przmo-red text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium text-[10px]">
+                  1
+                </span>
               </button>
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="text-black focus:outline-none p-2"
+                className="text-black focus:outline-none p-2 hover:text-przmo-red transition-colors"
+                data-testid="button-mobile-menu"
+                aria-label="Open menu"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -126,15 +130,17 @@ export default function Navigation() {
                 <div className="mt-12 space-y-6">
                   <button
                     onClick={scrollToDrops}
-                    className="block text-black text-xl font-semibold hover:text-przmo-red transition-colors"
+                    className="block text-black text-xl font-bold hover:text-przmo-red transition-colors uppercase tracking-wide"
+                    data-testid="button-mobile-drops"
                   >
                     Drops
                   </button>
                   <button
                     onClick={handleCollectionsClick}
                     className="block text-gray-500 text-xl font-medium hover:text-black transition-colors"
+                    data-testid="button-mobile-account"
                   >
-                    Collections
+                    Account
                   </button>
                 </div>
               </div>
@@ -160,6 +166,12 @@ export default function Navigation() {
           </div>
         </div>
       )}
+
+      {/* Search Modal */}
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 }
