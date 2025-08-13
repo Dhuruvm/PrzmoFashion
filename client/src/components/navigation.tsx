@@ -38,7 +38,7 @@ export default function Navigation() {
                 onClick={scrollToDrops}
                 className="text-black font-medium hover:text-gray-600 transition-colors duration-200"
               >
-                New & Featured
+                Drops
               </button>
               <button
                 onClick={handleCollectionsClick}

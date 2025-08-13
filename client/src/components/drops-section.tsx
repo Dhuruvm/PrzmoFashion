@@ -18,37 +18,25 @@ export default function DropsSection() {
   const [products] = useState<Product[]>([
     {
       id: 1,
-      name: "Performance Hoodie",
-      description: "Premium athletic hoodie with moisture-wicking technology",
-      price: "$89",
-      originalPrice: "$120",
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-      alt: "Athletic performance hoodie",
+      name: "PRZMO Sportswear Chill Poplin",
+      description: "Women's Striped Boxy Top",
+      price: "₹2,995.00",
+      image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
+      alt: "PRZMO Women's striped boxy top",
       badge: "BESTSELLER",
       rating: 4.8,
-      colors: ["#000000", "#1F2937", "#DC2626"]
+      colors: ["#FFC0CB", "#FFFFFF"]
     },
     {
       id: 2,
-      name: "Motion Runners",
-      description: "Lightweight performance running shoes with responsive cushioning",
-      price: "$149",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-      alt: "Performance running shoes",
+      name: "PRZMO Sportswear",
+      description: "Women's T-Shirt",
+      price: "₹2,195.00",
+      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
+      alt: "PRZMO Women's black t-shirt",
       badge: "NEW",
-      rating: 4.9,
-      colors: ["#FFFFFF", "#000000", "#EF4444"]
-    },
-    {
-      id: 3,
-      name: "Urban Tech Jacket",
-      description: "Weather-resistant jacket with modern street aesthetic",
-      price: "$199",
-      image: "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800",
-      alt: "Urban tech jacket",
-      badge: "LIMITED",
-      rating: 4.7,
-      colors: ["#000000", "#374151", "#059669"]
+      rating: 4.6,
+      colors: ["#000000", "#FFFFFF", "#808080"]
     }
   ]);
 
@@ -67,47 +55,49 @@ export default function DropsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header - Nike Style */}
         <div className="mb-8">
-          <h2 className="text-3xl font-playfair font-semibold text-black mb-2">
-            Featured
+          <h2 className="text-2xl font-medium text-black mb-2">
+            New Drops
           </h2>
         </div>
 
         {/* Product Grid - Nike Style */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {products.map((product) => (
             <div key={product.id} className="group cursor-pointer">
               {/* Product Image */}
-              <div className="relative w-full aspect-square mb-4 bg-gray-100">
+              <div className="relative w-full h-[500px] mb-4 overflow-hidden">
                 <img
                   src={product.image}
                   alt={product.alt}
                   className="w-full h-full object-cover"
                 />
+                
+                {/* Just In Badge */}
+                <div className="absolute bottom-4 left-4">
+                  <span className="text-orange-600 text-sm font-medium">Just In</span>
+                </div>
               </div>
 
               {/* Product Info */}
-              <div className="space-y-1">
+              <div className="space-y-1 px-1">
                 {/* Product Name */}
-                <h3 className="text-black font-playfair font-medium">
+                <h3 className="text-black font-medium text-base leading-tight">
                   {product.name}
                 </h3>
                 
                 {/* Category */}
-                <p className="text-gray-500 text-sm font-cormorant">
+                <p className="text-gray-600 text-sm">
                   {product.description}
                 </p>
 
                 {/* Colors Count */}
-                <p className="text-gray-500 text-sm font-sans">
-                  {product.colors.length} Color{product.colors.length > 1 ? 's' : ''}
+                <p className="text-gray-600 text-sm">
+                  {product.colors.length} Colour{product.colors.length > 1 ? 's' : ''}
                 </p>
 
                 {/* Price */}
-                <div className="flex items-center space-x-2 pt-1">
-                  <span className="text-black font-medium font-sans">{product.price}</span>
-                  {product.originalPrice && (
-                    <span className="text-gray-500 line-through text-sm font-sans">{product.originalPrice}</span>
-                  )}
+                <div className="pt-2">
+                  <span className="text-black font-medium text-base">MRP : {product.price}</span>
                 </div>
               </div>
             </div>
@@ -116,7 +106,7 @@ export default function DropsSection() {
 
         {/* More Products Grid */}
         <div className="mt-16">
-          <h2 className="text-3xl font-playfair font-semibold text-black mb-8">
+          <h2 className="text-2xl font-medium text-black mb-8">
             Don't Miss
           </h2>
           
