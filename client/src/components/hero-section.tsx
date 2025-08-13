@@ -13,22 +13,22 @@ export default function HeroSection() {
           className="w-full h-full object-cover"
         />
         
-        {/* Content Overlay - Bottom Left */}
-        <div className="absolute bottom-12 left-8 md:left-16 text-white max-w-md">
-          <p className="text-lg font-medium mb-2 font-cormorant tracking-wide">PRZMO Running</p>
-          <h1 className="text-4xl md:text-6xl font-playfair font-bold leading-tight mb-4 tracking-tight">
+        {/* Content Overlay - Nike Style Typography */}
+        <div className="absolute bottom-12 left-8 md:left-16 text-white max-w-lg">
+          <p className="text-sm md:text-lg font-light mb-4 tracking-widest uppercase">PRZMO ATHLETIC</p>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-none mb-6 tracking-tight">
             MORE CHOICE.
             <br />
             MORE RUNNING.
           </h1>
-          <p className="text-lg mb-6 leading-relaxed opacity-90 font-cormorant">
-            Pegasus. Vomero. Structure. Three updated classics reimagined for the modern athlete.
+          <p className="text-lg md:text-xl mb-8 leading-relaxed font-light max-w-md">
+            Performance-driven athletic wear designed for the modern lifestyle. Engineered for excellence.
           </p>
           <button 
             onClick={scrollToDrops}
-            className="bg-white text-black px-6 py-3 font-medium text-sm hover:bg-gray-100 transition-colors duration-200 font-sans"
+            className="bg-white text-black px-8 py-4 font-medium text-base hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 tracking-wide"
           >
-            Shop Now
+            EXPLORE COLLECTION
           </button>
         </div>
       </div>

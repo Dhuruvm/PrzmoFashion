@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ShoppingBag, Heart } from "lucide-react";
+import OrderModal from "./order-modal";
 
 interface Product {
   id: number;
@@ -64,21 +65,18 @@ export default function DropsSection() {
     }
   ]);
 
-  const [cart, setCart] = useState<{id: number, quantity: number, size: string}[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [orderModal, setOrderModal] = useState<{isOpen: boolean, product: Product | null}>({
+    isOpen: false,
+    product: null
+  });
 
-  const addToCart = (productId: number, size: string = "M") => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === productId && item.size === size);
-      if (existing) {
-        return prev.map(item => 
-          item.id === productId && item.size === size 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { id: productId, quantity: 1, size }];
-    });
+  const openOrderModal = (product: Product) => {
+    setOrderModal({ isOpen: true, product });
+  };
+
+  const closeOrderModal = () => {
+    setOrderModal({ isOpen: false, product: null });
   };
 
   const toggleFavorite = (productId: number) => {
@@ -92,11 +90,14 @@ export default function DropsSection() {
   return (
     <section id="drops" className="py-8 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header - Simple */}
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-black">
-            Drops
+        {/* Section Header - Nike Style Typography */}
+        <div className="mb-12 md:mb-16">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-black leading-none">
+            DROPS
           </h1>
+          <p className="text-lg md:text-xl text-gray-600 mt-2 font-light">
+            Latest Athletic Lifestyle Collection
+          </p>
         </div>
 
         {/* Product Grid - Nike Double Card Style */}
@@ -133,11 +134,11 @@ export default function DropsSection() {
                   <button
                     onClick={(e) => {
                       e.preventDefault();
-                      if (product.inStock) addToCart(product.id);
+                      if (product.inStock) openOrderModal(product);
                     }}
                     disabled={!product.inStock}
-                    className="bg-white text-black p-2 md:p-3 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    data-testid={`add-to-cart-${product.id}`}
+                    className="bg-white text-black p-2 md:p-3 rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid={`order-now-${product.id}`}
                   >
                     <ShoppingBag className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
@@ -146,9 +147,9 @@ export default function DropsSection() {
                       e.preventDefault();
                       toggleFavorite(product.id);
                     }}
-                    className={`p-2 md:p-3 rounded-full transition-colors ${
+                    className={`p-2 md:p-3 rounded-full transition-all duration-300 transform hover:scale-110 ${
                       favorites.includes(product.id)
-                        ? 'bg-red-500 text-white'
+                        ? 'bg-red-500 text-white scale-110'
                         : 'bg-white text-black hover:bg-gray-100'
                     }`}
                     data-testid={`favorite-${product.id}`}
@@ -200,31 +201,12 @@ export default function DropsSection() {
           ))}
         </div>
 
-        {/* Don't Miss Section */}
-        <div className="mt-12 md:mt-16">
-          <h2 className="text-xl md:text-2xl font-medium text-black mb-6 md:mb-8">
-            Don't Miss
-          </h2>
-          
-          {/* Large Feature Product */}
-          <div className="relative w-full h-64 md:h-[500px] mb-8 overflow-hidden">
-            <img
-              src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-              alt="Athletic training gear"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8 text-white">
-              <h3 className="text-2xl md:text-5xl font-bold mb-2 md:mb-4 leading-tight">
-                TRAIN LIKE
-                <br />
-                A CHAMPION
-              </h3>
-              <button className="bg-white text-black px-4 py-2 md:px-6 md:py-3 font-medium hover:bg-gray-100 transition-colors text-sm md:text-base">
-                Shop Training
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Order Modal */}
+      <OrderModal 
+        isOpen={orderModal.isOpen}
+        onClose={closeOrderModal}
+        product={orderModal.product}
+      />
       </div>
     </section>
   );
