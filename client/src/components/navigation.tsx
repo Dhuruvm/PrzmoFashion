@@ -124,31 +124,48 @@ export default function Navigation() {
 
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40">
-            <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-xl transform transition-transform duration-300">
-              <div className="p-6">
+          <div className="md:hidden fixed inset-0 bg-white z-50">
+            <div className="h-full w-full bg-white">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <span className="text-xl font-bold text-black">Menu</span>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="absolute top-6 right-6 text-black"
+                  className="p-2 text-black hover:text-przmo-red transition-colors"
+                  data-testid="button-close-mobile-menu"
+                  aria-label="Close menu"
                 >
                   <X className="w-6 h-6" />
                 </button>
-                <div className="mt-12 space-y-6">
-                  <button
-                    onClick={scrollToDrops}
-                    className="block text-black text-xl font-bold hover:text-przmo-red transition-colors uppercase tracking-wide"
-                    data-testid="button-mobile-drops"
-                  >
-                    Drops
-                  </button>
-                  <button
-                    onClick={handleCollectionsClick}
-                    className="block text-gray-500 text-xl font-medium hover:text-black transition-colors"
-                    data-testid="button-mobile-account"
-                  >
-                    Account
-                  </button>
-                </div>
+              </div>
+              <div className="px-6 py-8 space-y-8">
+                <button
+                  onClick={scrollToDrops}
+                  className="block w-full text-left text-2xl font-bold text-black hover:text-przmo-red transition-colors py-4 border-b border-gray-100"
+                  data-testid="button-mobile-drops"
+                >
+                  Drops
+                </button>
+                <button
+                  onClick={handleCollectionsClick}
+                  className="block w-full text-left text-2xl font-bold text-black hover:text-przmo-red transition-colors py-4 border-b border-gray-100"
+                  data-testid="button-mobile-collections"
+                >
+                  Collections
+                </button>
+                <button
+                  onClick={handleCollectionsClick}
+                  className="block w-full text-left text-2xl font-bold text-black hover:text-przmo-red transition-colors py-4 border-b border-gray-100"
+                  data-testid="button-mobile-about"
+                >
+                  About
+                </button>
+                <button
+                  onClick={handleCollectionsClick}
+                  className="block w-full text-left text-2xl font-bold text-black hover:text-przmo-red transition-colors py-4"
+                  data-testid="button-mobile-contact"
+                >
+                  Contact
+                </button>
               </div>
             </div>
           </div>
