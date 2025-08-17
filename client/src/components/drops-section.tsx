@@ -110,16 +110,26 @@ export default function DropsSection() {
           </p>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="group bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
-              data-testid={`product-card-${product.id}`}
-            >
-              {/* Product Image */}
-              <div className="relative aspect-square overflow-hidden bg-gray-50">
+        {/* Products Grid - Double Card Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          {products.map((product, index) => {
+            // Create alternating double-wide pattern: wide-narrow-narrow-wide
+            const isDoubleWide = index % 4 === 0 || index % 4 === 3;
+            
+            return (
+              <div
+                key={product.id}
+                className={`group bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
+                  isDoubleWide 
+                    ? 'md:col-span-2 lg:col-span-2' 
+                    : 'md:col-span-1 lg:col-span-1'
+                }`}
+                data-testid={`product-card-${product.id}`}
+              >
+              {/* Product Image - Responsive aspect ratio */}
+              <div className={`relative overflow-hidden bg-gray-50 ${
+                isDoubleWide ? 'aspect-[4/3] lg:aspect-[3/2]' : 'aspect-square'
+              }`}>
                 <img
                   src={product.image}
                   alt={product.alt}
@@ -173,15 +183,19 @@ export default function DropsSection() {
                 </div>
               </div>
 
-              {/* Product Info */}
-              <div className="p-6 space-y-4">
+              {/* Product Info - Enhanced for double layout */}
+              <div className={`space-y-4 ${isDoubleWide ? 'p-8' : 'p-6'}`}>
                 {/* Product Name */}
-                <h3 className="font-bold text-black text-xl leading-tight" data-testid={`product-name-${product.id}`}>
+                <h3 className={`font-bold text-black leading-tight ${
+                  isDoubleWide ? 'text-2xl lg:text-3xl' : 'text-xl'
+                }`} data-testid={`product-name-${product.id}`}>
                   {product.name}
                 </h3>
                 
                 {/* Product Description */}
-                <p className="text-gray-600 text-sm" data-testid={`product-description-${product.id}`}>
+                <p className={`text-gray-600 ${
+                  isDoubleWide ? 'text-base lg:text-lg' : 'text-sm'
+                }`} data-testid={`product-description-${product.id}`}>
                   {product.description}
                 </p>
 
@@ -190,13 +204,17 @@ export default function DropsSection() {
                   {product.colors} Colour{product.colors > 1 ? 's' : ''}
                 </p>
 
-                {/* Price */}
+                {/* Price - Enhanced for double cards */}
                 <div className="flex items-center gap-3">
-                  <span className="text-black font-bold text-xl" data-testid={`product-price-${product.id}`}>
+                  <span className={`text-black font-bold ${
+                    isDoubleWide ? 'text-2xl lg:text-3xl' : 'text-xl'
+                  }`} data-testid={`product-price-${product.id}`}>
                     MRP : {product.price}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-gray-500 text-sm line-through">
+                    <span className={`text-gray-500 line-through ${
+                      isDoubleWide ? 'text-base lg:text-lg' : 'text-sm'
+                    }`}>
                       {product.originalPrice}
                     </span>
                   )}
@@ -211,15 +229,19 @@ export default function DropsSection() {
                   </span>
                 </div>
                 
-                {/* Action Buttons */}
-                <div className="flex gap-3 pt-4">
+                {/* Action Buttons - Enhanced for double cards */}
+                <div className={`flex gap-3 pt-4 ${isDoubleWide ? 'flex-col lg:flex-row' : ''}`}>
                   <Button
                     onClick={(e) => handleQuickAddToCart(product, e)}
                     disabled={!product.inStock}
-                    className="flex-1 bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed h-12 font-semibold"
+                    className={`bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold ${
+                      isDoubleWide 
+                        ? 'flex-1 h-14 lg:h-12 text-lg lg:text-base' 
+                        : 'flex-1 h-12'
+                    }`}
                     data-testid={`quick-add-cart-${product.id}`}
                   >
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className={`mr-2 ${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'}`} />
                     Quick Add
                   </Button>
                   <Button
@@ -229,10 +251,14 @@ export default function DropsSection() {
                     }}
                     disabled={!product.inStock}
                     variant="outline"
-                    className="px-6 h-12 border-2 border-black text-black hover:bg-black hover:text-white disabled:opacity-50 font-semibold"
+                    className={`border-2 border-black text-black hover:bg-black hover:text-white disabled:opacity-50 font-semibold ${
+                      isDoubleWide 
+                        ? 'flex-1 lg:px-6 h-14 lg:h-12 text-lg lg:text-base' 
+                        : 'px-6 h-12'
+                    }`}
                     data-testid={`order-modal-${product.id}`}
                   >
-                    <ShoppingBag className="w-4 h-4" />
+                    <ShoppingBag className={`${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'}`} />
                   </Button>
                   <Button
                     onClick={(e) => {
@@ -240,19 +266,25 @@ export default function DropsSection() {
                       toggleFavorite(product.id);
                     }}
                     variant="outline"
-                    className={`px-6 h-12 border-2 font-semibold ${
+                    className={`border-2 font-semibold ${
                       favorites.includes(product.id)
                         ? 'bg-red-500 border-red-500 text-white hover:bg-red-600'
                         : 'border-gray-300 text-gray-600 hover:border-red-500 hover:text-red-500'
+                    } ${
+                      isDoubleWide 
+                        ? 'flex-1 lg:px-6 h-14 lg:h-12 text-lg lg:text-base' 
+                        : 'px-6 h-12'
                     }`}
                     data-testid={`favorite-toggle-${product.id}`}
                   >
-                    <Heart className={`w-4 h-4 ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
+                    <Heart className={`${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'} ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
                   </Button>
+
                 </div>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       </div>
 
