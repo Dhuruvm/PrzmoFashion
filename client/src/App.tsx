@@ -4,8 +4,10 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 import LoadingScreen from "@/components/loading-screen";
 import { CartProvider } from "@/components/cart-context";
+import PerformanceTracker from "@/components/monitoring/performance-tracker";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 
@@ -26,18 +28,21 @@ function App() {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <CartProvider>
-          <Toaster />
-          {isLoading ? (
-            <LoadingScreen onLoadingComplete={handleLoadingComplete} />
-          ) : (
-            <Router />
-          )}
-        </CartProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <CartProvider>
+            <Toaster />
+            {isLoading ? (
+              <LoadingScreen onLoadingComplete={handleLoadingComplete} />
+            ) : (
+              <Router />
+            )}
+            <PerformanceTracker />
+          </CartProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
