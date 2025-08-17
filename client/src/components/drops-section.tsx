@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ShoppingBag, Heart, Plus } from "lucide-react";
 import OrderModal from "./order-modal";
 import { useCart } from "./cart-context";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface Product {
   id: number;
@@ -71,7 +72,10 @@ export default function DropsSection() {
     isOpen: false,
     product: null
   });
+  const [animatingItems, setAnimatingItems] = useState<Set<number>>(new Set());
   const { addToCart } = useCart();
+  const { toast } = useToast();
+  const cartButtonRefs = useRef<{[key: number]: HTMLButtonElement | null}>({});
 
   const openOrderModal = (product: Product) => {
     setOrderModal({ isOpen: true, product });
@@ -81,12 +85,64 @@ export default function DropsSection() {
     setOrderModal({ isOpen: false, product: null });
   };
 
-  const handleQuickAddToCart = (product: Product, e: React.MouseEvent) => {
+  const handleAddToCart = async (product: Product, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (product.inStock) {
-      addToCart(product, "M"); // Default size M for quick add
+    
+    if (!product.inStock) return;
+    
+    // Start animation
+    setAnimatingItems(prev => new Set([...prev, product.id]));
+    
+    // Get button position for animation
+    const button = cartButtonRefs.current[product.id];
+    if (button) {
+      // Create floating animation element
+      const rect = button.getBoundingClientRect();
+      const animationElement = document.createElement('div');
+      animationElement.innerHTML = `
+        <div class="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          Added to Cart!
+        </div>
+      `;
+      animationElement.style.position = 'fixed';
+      animationElement.style.left = `${rect.left + rect.width / 2 - 60}px`;
+      animationElement.style.top = `${rect.top - 50}px`;
+      animationElement.style.zIndex = '9999';
+      animationElement.style.pointerEvents = 'none';
+      animationElement.style.animation = 'cartAddAnimation 2s ease-out forwards';
+      
+      document.body.appendChild(animationElement);
+      
+      // Remove animation element after animation completes
+      setTimeout(() => {
+        if (document.body.contains(animationElement)) {
+          document.body.removeChild(animationElement);
+        }
+      }, 2000);
     }
+    
+    // Add to cart
+    addToCart(product, "M"); // Default size M for quick add
+    
+    // Show toast notification
+    toast({
+      title: "Added to Cart!",
+      description: `${product.name} has been added to your cart`,
+      duration: 3000,
+    });
+    
+    // End animation after delay
+    setTimeout(() => {
+      setAnimatingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(product.id);
+        return newSet;
+      });
+    }, 1000);
   };
 
   const toggleFavorite = (productId: number) => {
@@ -110,8 +166,8 @@ export default function DropsSection() {
           </p>
         </div>
 
-        {/* Products Grid - Double Card Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        {/* Products Grid - Enhanced Double Card Layout for Mobile & Desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {products.map((product, index) => {
             // Create alternating double-wide pattern: wide-narrow-narrow-wide
             const isDoubleWide = index % 4 === 0 || index % 4 === 3;
@@ -121,14 +177,16 @@ export default function DropsSection() {
                 key={product.id}
                 className={`group bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
                   isDoubleWide 
-                    ? 'md:col-span-2 lg:col-span-2' 
-                    : 'md:col-span-1 lg:col-span-1'
+                    ? 'sm:col-span-2 lg:col-span-2' 
+                    : 'sm:col-span-1 lg:col-span-1'
                 }`}
                 data-testid={`product-card-${product.id}`}
               >
-              {/* Product Image - Responsive aspect ratio */}
+              {/* Product Image - Enhanced responsive aspect ratio */}
               <div className={`relative overflow-hidden bg-gray-50 ${
-                isDoubleWide ? 'aspect-[4/3] lg:aspect-[3/2]' : 'aspect-square'
+                isDoubleWide 
+                  ? 'aspect-[4/3] sm:aspect-[3/2] lg:aspect-[5/3]' 
+                  : 'aspect-square'
               }`}>
                 <img
                   src={product.image}
@@ -232,17 +290,20 @@ export default function DropsSection() {
                 {/* Action Buttons - Enhanced for double cards */}
                 <div className={`flex gap-3 pt-4 ${isDoubleWide ? 'flex-col lg:flex-row' : ''}`}>
                   <Button
-                    onClick={(e) => handleQuickAddToCart(product, e)}
+                    ref={(el) => cartButtonRefs.current[product.id] = el}
+                    onClick={(e) => handleAddToCart(product, e)}
                     disabled={!product.inStock}
-                    className={`bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold ${
+                    className={`bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all duration-200 ${
                       isDoubleWide 
                         ? 'flex-1 h-14 lg:h-12 text-lg lg:text-base' 
                         : 'flex-1 h-12'
+                    } ${
+                      animatingItems.has(product.id) ? 'cart-button-animating' : ''
                     }`}
-                    data-testid={`quick-add-cart-${product.id}`}
+                    data-testid={`add-to-cart-${product.id}`}
                   >
                     <Plus className={`mr-2 ${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'}`} />
-                    Quick Add
+                    Add to Cart
                   </Button>
                   <Button
                     onClick={(e) => {
