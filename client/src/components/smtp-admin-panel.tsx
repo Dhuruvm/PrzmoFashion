@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import { AdminLogin } from './admin-login';
 import { 
   Server, 
   Mail, 
@@ -18,7 +19,9 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Users
+  Users,
+  LogOut,
+  User
 } from 'lucide-react';
 
 interface SMTPConfig {
@@ -61,6 +64,12 @@ export function SMTPAdminPanel() {
   const [apiKeys, setAPIKeys] = useState<APIKey[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminToken, setAdminToken] = useState<string | null>(null);
+  const [adminInfo, setAdminInfo] = useState<any>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  
   // Configuration form
   const [config, setConfig] = useState<SMTPConfig>({
     host: '',
@@ -83,15 +92,94 @@ export function SMTPAdminPanel() {
   const [testApiKey, setTestApiKey] = useState('');
   const [testDomain, setTestDomain] = useState('');
 
-  // Load status on component mount
+  // Check authentication on component mount
   useEffect(() => {
-    loadStatus();
-    loadAPIKeys();
+    checkAuthentication();
   }, []);
+
+  // Load data when authenticated
+  useEffect(() => {
+    if (isAuthenticated && adminToken) {
+      loadStatus();
+      loadAPIKeys();
+    }
+  }, [isAuthenticated, adminToken]);
+
+  const checkAuthentication = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        setCheckingAuth(false);
+        return;
+      }
+
+      const response = await fetch('/api/admin/verify-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ token })
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.valid) {
+        setIsAuthenticated(true);
+        setAdminToken(token);
+        setAdminInfo(data.admin);
+      } else {
+        localStorage.removeItem('adminToken');
+        setIsAuthenticated(false);
+        setAdminToken(null);
+        setAdminInfo(null);
+      }
+    } catch (error) {
+      console.error('Auth check error:', error);
+      localStorage.removeItem('adminToken');
+      setIsAuthenticated(false);
+      setAdminToken(null);
+      setAdminInfo(null);
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
+
+  const handleLoginSuccess = (token: string, admin: any) => {
+    setIsAuthenticated(true);
+    setAdminToken(token);
+    setAdminInfo(admin);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('adminToken');
+      setIsAuthenticated(false);
+      setAdminToken(null);
+      setAdminInfo(null);
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out",
+      });
+    }
+  };
 
   const loadStatus = async () => {
     try {
-      const response = await fetch('/api/smtp/status');
+      const response = await fetch('/api/smtp/status', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      });
       const data = await response.json();
       
       if (data.success) {
@@ -104,7 +192,11 @@ export function SMTPAdminPanel() {
 
   const loadAPIKeys = async () => {
     try {
-      const response = await fetch('/api/smtp/keys');
+      const response = await fetch('/api/smtp/keys', {
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
+      });
       const data = await response.json();
       
       if (data.success) {
@@ -123,7 +215,8 @@ export function SMTPAdminPanel() {
       const response = await fetch('/api/smtp/configure', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
         },
         body: JSON.stringify(config)
       });
@@ -170,7 +263,8 @@ export function SMTPAdminPanel() {
       const response = await fetch('/api/smtp/generate-key', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
         },
         body: JSON.stringify({ domain: newKeyDomain.trim() })
       });
@@ -226,7 +320,8 @@ export function SMTPAdminPanel() {
       const response = await fetch('/api/smtp/test', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
         },
         body: JSON.stringify({
           testEmail: testEmail.trim(),
@@ -263,7 +358,10 @@ export function SMTPAdminPanel() {
   const handleRevokeKey = async (keyId: string) => {
     try {
       const response = await fetch(`/api/smtp/keys/${keyId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${adminToken}`
+        }
       });
       
       const data = await response.json();
@@ -290,11 +388,46 @@ export function SMTPAdminPanel() {
     }
   };
 
+  // Show loading screen while checking auth
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Verifying authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center space-x-2">
-        <Server className="h-6 w-6" />
-        <h1 className="text-2xl font-bold">SMTP Server Administration</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Server className="h-6 w-6" />
+          <h1 className="text-2xl font-bold">SMTP Server Administration</h1>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <User className="h-4 w-4" />
+            <span>{adminInfo?.email}</span>
+          </div>
+          <Button 
+            onClick={handleLogout}
+            variant="outline"
+            size="sm"
+            className="flex items-center space-x-2"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </Button>
+        </div>
       </div>
       
       {/* Status Overview */}

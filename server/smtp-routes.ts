@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { body, query, validationResult } from 'express-validator';
 import rateLimit from 'express-rate-limit';
 import { secureSMTPServer, SMTPConfig, EmailOptions, AuthCredentials } from './smtp-server';
+import { requireAdminAuth } from './admin-auth';
 
 const router = Router();
 
@@ -99,6 +100,7 @@ const handleValidationErrors = (req: Request, res: Response, next: Function) => 
  * Configure SMTP server settings
  */
 router.post('/configure', 
+  requireAdminAuth,
   adminRateLimit,
   validateSMTPConfig,
   handleValidationErrors,
@@ -159,6 +161,7 @@ router.post('/send',
  * Generate new API key for domain
  */
 router.post('/generate-key',
+  requireAdminAuth,
   adminRateLimit,
   [body('domain').isString().notEmpty().withMessage('Domain is required')],
   handleValidationErrors,
@@ -207,8 +210,9 @@ router.get('/status', (req, res) => {
  * List all API keys (admin only)
  */
 router.get('/keys',
+  requireAdminAuth,
   adminRateLimit,
-  (req, res) => {
+  (req: Request, res: Response) => {
     try {
       const keys = secureSMTPServer.listAPIKeys();
       res.status(200).json({
@@ -230,8 +234,9 @@ router.get('/keys',
  * Revoke API key
  */
 router.delete('/keys/:keyId',
+  requireAdminAuth,
   adminRateLimit,
-  (req, res) => {
+  (req: Request, res: Response) => {
     try {
       const { keyId } = req.params;
       const success = secureSMTPServer.revokeAPIKey(keyId);
@@ -255,6 +260,7 @@ router.delete('/keys/:keyId',
  * Test SMTP configuration with a test email
  */
 router.post('/test',
+  requireAdminAuth,
   adminRateLimit,
   [
     body('testEmail').isEmail().withMessage('Test email must be valid'),

@@ -1,4 +1,5 @@
 import { secureSMTPServer } from './smtp-server';
+import { getEmailConfig, getGmailSetupInstructions, validateCredentials } from './email-credentials';
 
 /**
  * SMTP Manager - Handles initialization and configuration
@@ -16,25 +17,41 @@ export class SMTPManager {
   }
 
   /**
-   * Initialize SMTP server with environment variables
+   * Initialize SMTP server with environment variables or admin email
    */
   async initialize(): Promise<boolean> {
     try {
       // Check if SMTP environment variables are set
-      const smtpHost = process.env.SMTP_HOST;
-      const smtpPort = process.env.SMTP_PORT;
-      const smtpUser = process.env.SMTP_USER;
-      const smtpPass = process.env.SMTP_PASS;
-      const smtpSecure = process.env.SMTP_SECURE === 'true';
+      let smtpHost = process.env.SMTP_HOST;
+      let smtpPort = process.env.SMTP_PORT;
+      let smtpUser = process.env.SMTP_USER;
+      let smtpPass = process.env.SMTP_PASS;
+      let smtpSecure = process.env.SMTP_SECURE === 'true';
 
+      // If not configured, use secure email configuration
       if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
-        console.log('SMTP environment variables not configured. SMTP server will need manual configuration.');
-        return false;
+        console.log('Using secure email configuration...');
+        const emailConfig = getEmailConfig();
+        
+        // Validate the configuration
+        const validation = validateCredentials(emailConfig);
+        if (!validation.valid) {
+          console.error('Email configuration validation failed:');
+          validation.errors.forEach(error => console.error(`- ${error}`));
+          console.log(getGmailSetupInstructions());
+          return false;
+        }
+        
+        smtpHost = emailConfig.host;
+        smtpPort = emailConfig.port.toString();
+        smtpUser = emailConfig.username;
+        smtpPass = emailConfig.password;
+        smtpSecure = emailConfig.secure;
       }
 
       const config = {
         host: smtpHost,
-        port: parseInt(smtpPort),
+        port: parseInt(smtpPort as string),
         secure: smtpSecure,
         auth: {
           user: smtpUser,

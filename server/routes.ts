@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { sendEmail } from "./smtp-service";
 import { runEmailDiagnostics, getEmailDiagnostics } from "./email-diagnostics";
 import { smtpRouter } from "./smtp-routes";
+import { adminRouter } from "./admin-routes";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
@@ -99,6 +100,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Mount SMTP routes
   app.use('/api/smtp', smtpRouter);
+  
+  // Mount admin routes
+  app.use('/api/admin', adminRouter);
 
   const httpServer = createServer(app);
 
