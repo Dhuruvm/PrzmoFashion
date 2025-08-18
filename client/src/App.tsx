@@ -12,6 +12,7 @@ import EmailStatusIndicator from "@/components/email-status-indicator";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import { AdminPage } from "@/pages/admin";
+import { OrdersPage } from "@/pages/orders";
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/admin" component={AdminPage} />
       <Route path="/smtp-admin" component={AdminPage} />
+      <Route path="/orders" component={OrdersPage} />
       <Route component={NotFound} />
     </Switch>
   );
