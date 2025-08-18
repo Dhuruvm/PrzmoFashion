@@ -68,7 +68,11 @@ export default function OrderModal({ isOpen, onClose, product }: OrderModalProps
   if (orderComplete) {
     return (
       <Dialog open={isOpen} onOpenChange={resetModal}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px]" aria-describedby="order-success-description">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Order Confirmation</DialogTitle>
+            <DialogDescription id="order-success-description">Your order has been successfully placed</DialogDescription>
+          </DialogHeader>
           <div className="text-center py-8">
             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle className="w-8 h-8 text-green-600" />
@@ -106,11 +110,11 @@ export default function OrderModal({ isOpen, onClose, product }: OrderModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" aria-describedby="order-form-description">
         <DialogHeader>
           <DialogTitle>Complete Your Order</DialogTitle>
-          <DialogDescription>
-            Fill in your details to place an order with Cash on Delivery
+          <DialogDescription id="order-form-description">
+            Fill in your details and delivery information to complete your purchase of {product.name}
           </DialogDescription>
         </DialogHeader>
 
