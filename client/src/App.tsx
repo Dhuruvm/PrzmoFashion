@@ -11,11 +11,13 @@ import PerformanceTracker from "@/components/monitoring/performance-tracker";
 import EmailStatusIndicator from "@/components/email-status-indicator";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
+import SMTPAdminPage from "@/pages/smtp-admin";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/smtp-admin" component={SMTPAdminPage} />
       <Route component={NotFound} />
     </Switch>
   );

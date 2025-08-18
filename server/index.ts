@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { readFileSync } from "fs";
+import { smtpManager } from "./smtp-manager";
 
 // Load environment variables from .env file
 try {
@@ -52,6 +53,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize SMTP server
+  await smtpManager.initialize();
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

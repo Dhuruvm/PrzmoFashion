@@ -1,8 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { sendEmail } from "./sendgrid";
+import { sendEmail } from "./smtp-service";
 import { runEmailDiagnostics, getEmailDiagnostics } from "./email-diagnostics";
+import { smtpRouter } from "./smtp-routes";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
@@ -95,6 +96,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Internal server error" });
     }
   });
+
+  // Mount SMTP routes
+  app.use('/api/smtp', smtpRouter);
 
   const httpServer = createServer(app);
 
