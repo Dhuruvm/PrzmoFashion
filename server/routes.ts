@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { sendEmail } from "./sendgrid";
+import { runEmailDiagnostics, getEmailDiagnostics } from "./email-diagnostics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
@@ -11,6 +12,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       timestamp: new Date().toISOString(),
       version: "1.0.0" 
     });
+  });
+
+  // Email diagnostics endpoint
+  app.get("/api/email-diagnostics", async (req, res) => {
+    try {
+      const diagnostics = await runEmailDiagnostics();
+      res.json(diagnostics);
+    } catch (error) {
+      console.error("Email diagnostics error:", error);
+      res.status(500).json({ error: "Failed to run diagnostics" });
+    }
   });
 
   // Test SendGrid email endpoint

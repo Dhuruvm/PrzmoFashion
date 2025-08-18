@@ -39,6 +39,25 @@ function App() {
               <Router />
             )}
             <PerformanceTracker />
+            {/* Email Integration Demo - only in development */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="fixed top-20 right-4 z-50">
+                <button 
+                  onClick={() => {
+                    fetch('/api/email-diagnostics')
+                      .then(r => r.json())
+                      .then(data => {
+                        console.log('Email Diagnostics:', data);
+                        alert(`Email System Status: ${data.apiKeyStatus}\nSee console for details.`);
+                      })
+                      .catch(e => console.error('Diagnostics failed:', e));
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow-lg"
+                >
+                  Test Email
+                </button>
+              </div>
+            )}
           </CartProvider>
         </TooltipProvider>
       </QueryClientProvider>

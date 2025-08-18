@@ -25,6 +25,14 @@ interface EmailParams {
 
 export async function sendEmail(params: EmailParams): Promise<boolean> {
   try {
+    // Debug logging for API key validation
+    const apiKey = process.env.SENDGRID_API_KEY;
+    console.log('API Key status:', {
+      exists: !!apiKey,
+      format: apiKey ? `${apiKey.substring(0, 5)}...${apiKey.substring(apiKey.length - 5)}` : 'none',
+      length: apiKey?.length
+    });
+
     const mailData: any = {
       to: params.to,
       from: params.from,
@@ -39,10 +47,25 @@ export async function sendEmail(params: EmailParams): Promise<boolean> {
       mailData.text = params.subject;
     }
 
+    console.log('Sending email with data:', {
+      to: mailData.to,
+      from: mailData.from,
+      subject: mailData.subject,
+      hasText: !!mailData.text,
+      hasHtml: !!mailData.html
+    });
+
     await getMailService().send(mailData);
+    console.log('Email sent successfully');
     return true;
-  } catch (error) {
-    console.error('SendGrid email error:', error);
+  } catch (error: any) {
+    console.error('SendGrid email error details:', {
+      message: error.message,
+      code: error.code,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      body: error.response?.body
+    });
     return false;
   }
 }
