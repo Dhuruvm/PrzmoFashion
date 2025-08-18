@@ -92,7 +92,7 @@ export default function DropsSection() {
     if (!product.inStock) return;
     
     // Start animation
-    setAnimatingItems(prev => new Set([...prev, product.id]));
+    setAnimatingItems(prev => new Set(Array.from(prev).concat([product.id])));
     
     // Get button position for animation
     const button = cartButtonRefs.current[product.id];
