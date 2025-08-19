@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { sendEmail } from "./smtp-service";
+import { sendRealEmail } from "./email-test-service";
 import { runEmailDiagnostics, getEmailDiagnostics } from "./email-diagnostics";
 import { smtpRouter } from "./smtp-routes";
 import { adminRouter } from "./admin-routes";
@@ -39,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const success = await sendEmail({ to, from, subject, text, html });
+      const success = await sendRealEmail({ to, from, subject, text, html });
       
       if (success) {
         res.json({ success: true, message: "Email sent successfully" });
