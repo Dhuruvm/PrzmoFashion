@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface EmailDiagnostics {
-  apiKeyStatus: 'missing' | 'invalid_format' | 'unauthorized' | 'valid';
-  apiKeyLength?: number;
-  apiKeyPrefix?: string;
+  smtpStatus: 'missing' | 'partial' | 'configured' | 'valid';
+  smtpHost?: string;
+  smtpUser?: string;
+  hasAppPassword: boolean;
   environmentLoaded: boolean;
   lastError?: string;
   testResults: {
@@ -43,9 +44,9 @@ const EmailStatusIndicator = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'valid': return 'bg-green-500';
-      case 'unauthorized': return 'bg-yellow-500';
-      case 'missing':
-      case 'invalid_format': return 'bg-red-500';
+      case 'configured': return 'bg-blue-500';
+      case 'partial': return 'bg-yellow-500';
+      case 'missing': return 'bg-red-500';
       default: return 'bg-gray-500';
     }
   };
@@ -53,9 +54,9 @@ const EmailStatusIndicator = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'valid': return 'Active';
-      case 'unauthorized': return 'Invalid Key';
-      case 'missing': return 'No Key';
-      case 'invalid_format': return 'Bad Format';
+      case 'configured': return 'Ready';
+      case 'partial': return 'Partial';
+      case 'missing': return 'Not Set';
       default: return 'Unknown';
     }
   };
@@ -69,11 +70,11 @@ const EmailStatusIndicator = () => {
       {!isExpanded ? (
         <Badge 
           variant="outline" 
-          className={`cursor-pointer px-3 py-2 ${diagnostics ? getStatusColor(diagnostics.apiKeyStatus) : 'bg-gray-500'} text-white border-0 shadow-lg`}
+          className={`cursor-pointer px-3 py-2 ${diagnostics ? getStatusColor(diagnostics.smtpStatus) : 'bg-gray-500'} text-white border-0 shadow-lg`}
           onClick={() => setIsExpanded(true)}
         >
           <Mail className="w-3 h-3 mr-1" />
-          Email: {diagnostics ? getStatusText(diagnostics.apiKeyStatus) : 'Loading...'}
+          SMTP: {diagnostics ? getStatusText(diagnostics.smtpStatus) : 'Loading...'}
         </Badge>
       ) : (
         <Card className="w-80 bg-white/95 backdrop-blur-sm shadow-xl">
@@ -92,7 +93,7 @@ const EmailStatusIndicator = () => {
                 ×
               </Button>
             </div>
-            <CardDescription>SendGrid Integration Diagnostics</CardDescription>
+            <CardDescription>SMTP Integration Diagnostics</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -100,8 +101,8 @@ const EmailStatusIndicator = () => {
               <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${getStatusColor(diagnostics.apiKeyStatus)}`} />
-                    <span className="font-medium">{getStatusText(diagnostics.apiKeyStatus)}</span>
+                    <div className={`w-2 h-2 rounded-full ${getStatusColor(diagnostics.smtpStatus)}`} />
+                    <span className="font-medium">{getStatusText(diagnostics.smtpStatus)}</span>
                   </div>
                   <Button
                     variant="outline"
@@ -126,25 +127,31 @@ const EmailStatusIndicator = () => {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Key Format:</span>
-                    <span className={diagnostics.apiKeyLength === 69 ? 'text-green-600' : 'text-red-600'}>
-                      {diagnostics.apiKeyLength} chars
+                    <span className="text-gray-600">SMTP Host:</span>
+                    <span className="text-gray-600">
+                      {diagnostics.smtpHost || 'Not set'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Key Preview:</span>
+                    <span className="text-gray-600">SMTP User:</span>
                     <code className="text-xs bg-gray-100 px-1 rounded">
-                      {diagnostics.apiKeyPrefix || 'none'}
+                      {diagnostics.smtpUser || 'none'}
                     </code>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">App Password:</span>
+                    <span className={diagnostics.hasAppPassword ? 'text-green-600' : 'text-red-600'}>
+                      {diagnostics.hasAppPassword ? 'Set' : 'Missing'}
+                    </span>
                   </div>
                 </div>
 
-                {diagnostics.apiKeyStatus === 'unauthorized' && (
+                {diagnostics.smtpStatus === 'partial' && (
                   <Alert className="border-yellow-200 bg-yellow-50">
                     <AlertCircle className="w-4 h-4 text-yellow-600" />
                     <AlertDescription className="text-yellow-800 text-sm">
-                      <div className="font-medium mb-1">API Key Issue Detected</div>
-                      <div>The SendGrid API key exists but is invalid, expired, or from a suspended account.</div>
+                      <div className="font-medium mb-1">SMTP Partially Configured</div>
+                      <div>SMTP user is set but Gmail App Password is missing. Set GMAIL_APP_PASSWORD environment variable.</div>
                     </AlertDescription>
                   </Alert>
                 )}

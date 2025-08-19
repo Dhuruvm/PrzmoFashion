@@ -92,7 +92,7 @@ export default function EmailIntegrationDemo() {
             </Badge>
           </div>
           <CardDescription>
-            Test SendGrid email functionality
+            Test SMTP email functionality
           </CardDescription>
         </CardHeader>
 
@@ -192,7 +192,7 @@ export default function EmailIntegrationDemo() {
           <div className="pt-2 border-t text-xs text-gray-600">
             <div className="flex items-center gap-2 mb-1">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>SendGrid Integration Active</span>
+              <span>SMTP Integration Active</span>
             </div>
             <div>From: noreply@przmo.com</div>
           </div>

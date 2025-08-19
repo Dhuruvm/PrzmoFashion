@@ -28,7 +28,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Test SendGrid email endpoint
+  // Test SMTP email endpoint
   app.post("/api/send-email", async (req, res) => {
     try {
       const { to, from, subject, text, html } = req.body;

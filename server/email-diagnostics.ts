@@ -1,12 +1,13 @@
 /**
  * Email Integration Diagnostics
- * Comprehensive testing and validation for SendGrid integration
+ * Comprehensive testing and validation for SMTP integration using nodemailer
  */
 
 export interface EmailDiagnostics {
-  apiKeyStatus: 'missing' | 'invalid_format' | 'unauthorized' | 'valid';
-  apiKeyLength?: number;
-  apiKeyPrefix?: string;
+  smtpStatus: 'missing' | 'partial' | 'configured' | 'valid';
+  smtpHost?: string;
+  smtpUser?: string;
+  hasAppPassword: boolean;
   environmentLoaded: boolean;
   lastError?: string;
   testResults: {
@@ -16,31 +17,30 @@ export interface EmailDiagnostics {
   };
 }
 
-export function validateApiKey(): EmailDiagnostics['apiKeyStatus'] {
-  const apiKey = process.env.SENDGRID_API_KEY;
+export function validateSMTPConfig(): EmailDiagnostics['smtpStatus'] {
+  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER;
+  const appPassword = process.env.GMAIL_APP_PASSWORD;
   
-  if (!apiKey) return 'missing';
+  if (!smtpUser) return 'missing';
+  if (!appPassword) return 'partial';
+  if (smtpHost && smtpUser && appPassword) return 'configured';
   
-  // SendGrid API keys should start with "SG." and be 69 characters long
-  if (!apiKey.startsWith('SG.')) return 'invalid_format';
-  if (apiKey.length !== 69) return 'invalid_format';
-  
-  // Additional format validation
-  const parts = apiKey.split('.');
-  if (parts.length !== 3) return 'invalid_format';
-  
-  return 'valid';
+  return 'missing';
 }
 
 export function getEmailDiagnostics(): EmailDiagnostics {
-  const apiKey = process.env.SENDGRID_API_KEY;
-  const apiKeyStatus = validateApiKey();
+  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER;
+  const appPassword = process.env.GMAIL_APP_PASSWORD;
+  const smtpStatus = validateSMTPConfig();
   
   return {
-    apiKeyStatus,
-    apiKeyLength: apiKey?.length,
-    apiKeyPrefix: apiKey ? `${apiKey.substring(0, 8)}...` : undefined,
-    environmentLoaded: !!process.env.SENDGRID_API_KEY,
+    smtpStatus,
+    smtpHost,
+    smtpUser,
+    hasAppPassword: !!appPassword,
+    environmentLoaded: !!smtpUser,
     testResults: {
       connectionTest: false,
       authenticationTest: false,
@@ -52,27 +52,33 @@ export function getEmailDiagnostics(): EmailDiagnostics {
 export async function runEmailDiagnostics(): Promise<EmailDiagnostics> {
   const diagnostics = getEmailDiagnostics();
   
-  // Only run connection tests if API key format is valid
-  if (diagnostics.apiKeyStatus === 'valid') {
+  // Only run connection tests if SMTP is configured
+  if (diagnostics.smtpStatus === 'configured') {
     try {
-      // Test SendGrid connection (simplified validation)
-      const testResponse = await fetch('https://api.sendgrid.com/v3/user/profile', {
-        headers: {
-          'Authorization': `Bearer ${process.env.SENDGRID_API_KEY}`,
-          'Content-Type': 'application/json'
+      // Import nodemailer for testing
+      const nodemailer = await import('nodemailer');
+      
+      // Create test transporter
+      const transporter = nodemailer.default.createTransport({
+        host: diagnostics.smtpHost,
+        port: 587,
+        secure: false,
+        auth: {
+          user: diagnostics.smtpUser,
+          pass: process.env.GMAIL_APP_PASSWORD
         }
       });
       
-      if (testResponse.ok) {
-        diagnostics.testResults.connectionTest = true;
-        diagnostics.testResults.authenticationTest = true;
-        diagnostics.apiKeyStatus = 'valid';
-      } else if (testResponse.status === 401) {
-        diagnostics.apiKeyStatus = 'unauthorized';
-        diagnostics.lastError = 'API key authentication failed';
-      }
+      // Test connection
+      await transporter.verify();
+      
+      diagnostics.testResults.connectionTest = true;
+      diagnostics.testResults.authenticationTest = true;
+      diagnostics.smtpStatus = 'valid';
+      
     } catch (error) {
-      diagnostics.lastError = `Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      diagnostics.lastError = `SMTP connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      diagnostics.smtpStatus = 'partial';
     }
   }
   
