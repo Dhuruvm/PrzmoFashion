@@ -7,6 +7,7 @@ import { runEmailDiagnostics, getEmailDiagnostics } from "./email-diagnostics";
 import { smtpRouter } from "./smtp-routes";
 import { adminRouter } from "./admin-routes";
 import { orderRouter } from "./order-routes";
+import { registerCommerceRoutes } from "./commerce-routes";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
@@ -108,6 +109,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Mount order routes
   app.use('/api/orders', orderRouter);
+  
+  // Register commerce routes
+  registerCommerceRoutes(app);
 
   const httpServer = createServer(app);
 
