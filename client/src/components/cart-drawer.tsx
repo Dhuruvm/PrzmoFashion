@@ -23,41 +23,28 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
-        <SheetHeader className="p-6 pb-4">
-          <div className="flex items-center justify-between">
-            <SheetTitle className="text-2xl font-bold text-black flex items-center gap-2">
-              <ShoppingBag className="w-6 h-6" />
-              Cart ({cartItems.length})
-            </SheetTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="p-2"
-              data-testid="button-close-cart"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-        </SheetHeader>
+      <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col bg-white">
+        {/* Clean Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+          <h2 className="text-xl font-medium text-black tracking-wide">CART</h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100"
+            data-testid="button-close-cart"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
 
-        <div className="flex-1 overflow-y-auto px-6">
+        <div className="flex-1 overflow-y-auto">
           {cartItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <ShoppingBag className="w-16 h-16 text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-600 mb-2">Your cart is empty</h3>
-              <p className="text-gray-500 mb-6">Add some items to get started!</p>
-              <Button
-                onClick={onClose}
-                className="bg-przmo-red hover:bg-red-600 text-white px-8"
-                data-testid="button-continue-shopping"
-              >
-                Continue Shopping
-              </Button>
+            <div className="flex items-center justify-center h-full">
+              <h3 className="text-lg font-medium text-black tracking-wide">YOUR CART IS EMPTY</h3>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="px-6 space-y-6">
               {cartItems.map((item) => (
                 <div key={`${item.id}-${item.size}`} className="flex gap-4 py-4 border-b border-gray-100">
                   <div className="w-20 h-20 bg-gray-100 rounded flex-shrink-0">
@@ -137,7 +124,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
             <Button
               onClick={handleCheckout}
-              className="w-full h-12 bg-przmo-red hover:bg-red-600 text-white font-bold uppercase tracking-wider rounded-none transition-colors"
+              className="w-full h-12 bg-black hover:bg-gray-800 text-white font-medium uppercase tracking-wider transition-colors"
               data-testid="button-checkout"
             >
               Checkout - ₹{total.toFixed(2)}
