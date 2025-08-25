@@ -22,46 +22,47 @@ export default function DropsSection() {
   const [products] = useState<Product[]>([
     {
       id: 1,
-      name: "PRZMO Sportswear Chill Poplin",
-      description: "Women's Striped Boxy Top",
-      price: "₹ 2,995.00",
-      originalPrice: "₹ 3,495.00",
+      name: "BLUELOCK OVERSIZED JERSEY",
+      description: "Premium Athletic Jersey",
+      price: "RS. 1,399.00",
+      originalPrice: "RS. 1,899.00",
       colors: 2,
       image: "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=500&fit=crop",
-      alt: "PRZMO Sportswear Chill Poplin",
+      alt: "BLUELOCK OVERSIZED JERSEY",
       inStock: true,
       sizes: ["XS", "S", "M", "L", "XL"]
     },
     {
       id: 2,
-      name: "PRZMO Sportswear Women's T-shirt",
-      description: "Premium Cotton Essential",
-      price: "₹ 2,195.00",
+      name: "GOJO OVERSIZED ZIP-UP",
+      description: "Premium Zip-Up Hoodie",
+      price: "RS. 1,399.00",
+      originalPrice: "RS. 1,799.00",
       colors: 3,
       image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop",
-      alt: "PRZMO Sportswear Women's T-shirt",
+      alt: "GOJO OVERSIZED ZIP-UP",
       inStock: true,
       sizes: ["XS", "S", "M", "L", "XL"]
     },
     {
       id: 3,
-      name: "PRZMO Training Hoodie",
-      description: "Men's Performance Fleece",
-      price: "₹ 3,495.00",
+      name: "SUKUNA OVERSIZED",
+      description: "Premium Oversized Tee",
+      price: "RS. 1,299.00",
       colors: 4,
       image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=500&fit=crop",
-      alt: "PRZMO Training Hoodie",
+      alt: "SUKUNA OVERSIZED",
       inStock: true,
       sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
       id: 4,
-      name: "PRZMO Training Shorts",
-      description: "Men's Athletic Performance",
-      price: "₹ 1,895.00",
+      name: "LIMITED EDITION",
+      description: "Exclusive Collection",
+      price: "RS. 1,899.00",
       colors: 2,
       image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500&h=500&fit=crop",
-      alt: "PRZMO Training Shorts",
+      alt: "LIMITED EDITION",
       inStock: false,
       sizes: ["S", "M", "L", "XL"]
     }
@@ -155,197 +156,66 @@ export default function DropsSection() {
 
   return (
     <section id="drops" className="py-16 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-black tracking-tight text-black leading-none mb-4">
-            DROPS
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-light tracking-[0.2em] text-black leading-none mb-2">
+            SUMMER COLLECTION
           </h1>
-          <p className="text-lg text-gray-600 font-light">
-            Latest Athletic Lifestyle Collection
-          </p>
         </div>
 
-        {/* Products Grid - Enhanced Double Card Layout for Mobile & Desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-          {products.map((product, index) => {
-            // Create alternating double-wide pattern: wide-narrow-narrow-wide
-            const isDoubleWide = index % 4 === 0 || index % 4 === 3;
-            
-            return (
-              <div
-                key={product.id}
-                className={`group bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
-                  isDoubleWide 
-                    ? 'sm:col-span-2 lg:col-span-2' 
-                    : 'sm:col-span-1 lg:col-span-1'
-                }`}
-                data-testid={`product-card-${product.id}`}
-              >
-              {/* Product Image - Enhanced responsive aspect ratio */}
-              <div className={`relative overflow-hidden bg-gray-50 ${
-                isDoubleWide 
-                  ? 'aspect-[4/3] sm:aspect-[3/2] lg:aspect-[5/3]' 
-                  : 'aspect-square'
-              }`}>
+        {/* Simple 2x2 Grid Layout */}
+        <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="group bg-white overflow-hidden cursor-pointer"
+              data-testid={`product-card-${product.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                if (product.inStock) openOrderModal(product);
+              }}
+            >
+              {/* Product Image - Square aspect ratio */}
+              <div className="relative aspect-square overflow-hidden bg-[#D4A5A5]">
                 <img
                   src={product.image}
                   alt={product.alt}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover"
                   data-testid={`product-image-${product.id}`}
                 />
-                
-                {/* Just In Badge */}
-                <div className="absolute top-4 left-4">
-                  <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    Just In
-                  </span>
-                </div>
 
-                {/* Sold Out Badge */}
+                {/* Sold Out Overlay */}
                 {!product.inStock && (
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                      Sold Out
+                  <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                    <span className="bg-white text-black text-sm font-medium px-4 py-2 border border-black">
+                      SOLD OUT
                     </span>
                   </div>
                 )}
-
-                {/* Hover Actions */}
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (product.inStock) openOrderModal(product);
-                    }}
-                    disabled={!product.inStock}
-                    className="bg-white text-black p-3 rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 disabled:opacity-50"
-                    data-testid={`order-now-${product.id}`}
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleFavorite(product.id);
-                    }}
-                    className={`p-3 rounded-full transition-all duration-300 transform hover:scale-110 ${
-                      favorites.includes(product.id)
-                        ? 'bg-red-500 text-white'
-                        : 'bg-white text-black hover:bg-gray-100'
-                    }`}
-                    data-testid={`favorite-${product.id}`}
-                  >
-                    <Heart className={`w-5 h-5 ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
-                  </button>
-                </div>
               </div>
 
-              {/* Product Info - Enhanced for double layout */}
-              <div className={`space-y-4 ${isDoubleWide ? 'p-8' : 'p-6'}`}>
+              {/* Product Info - Minimal layout matching screenshot */}
+              <div className="pt-4 text-center">
                 {/* Product Name */}
-                <h3 className={`font-bold text-black leading-tight ${
-                  isDoubleWide ? 'text-2xl lg:text-3xl' : 'text-xl'
-                }`} data-testid={`product-name-${product.id}`}>
+                <h3 className="text-sm font-medium text-black mb-2 tracking-wide" data-testid={`product-name-${product.id}`}>
                   {product.name}
                 </h3>
                 
-                {/* Product Description */}
-                <p className={`text-gray-600 ${
-                  isDoubleWide ? 'text-base lg:text-lg' : 'text-sm'
-                }`} data-testid={`product-description-${product.id}`}>
-                  {product.description}
-                </p>
-
-                {/* Colors Count */}
-                <p className="text-gray-500 text-sm" data-testid={`product-colors-${product.id}`}>
-                  {product.colors} Colour{product.colors > 1 ? 's' : ''}
-                </p>
-
-                {/* Price - Enhanced for double cards */}
-                <div className="flex items-center gap-3">
-                  <span className={`text-black font-bold ${
-                    isDoubleWide ? 'text-2xl lg:text-3xl' : 'text-xl'
-                  }`} data-testid={`product-price-${product.id}`}>
-                    MRP : {product.price}
-                  </span>
+                {/* Price */}
+                <div className="space-y-1">
+                  <div className="text-sm font-medium text-black" data-testid={`product-price-${product.id}`}>
+                    {product.price}
+                  </div>
                   {product.originalPrice && (
-                    <span className={`text-gray-500 line-through ${
-                      isDoubleWide ? 'text-base lg:text-lg' : 'text-sm'
-                    }`}>
+                    <div className="text-sm text-gray-500 line-through">
                       {product.originalPrice}
-                    </span>
+                    </div>
                   )}
-                </div>
-
-                {/* Stock Status */}
-                <div className="pt-2">
-                  <span className={`text-sm font-semibold ${
-                    product.inStock ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {product.inStock ? 'In Stock' : 'Sold Out'}
-                  </span>
-                </div>
-                
-                {/* Action Buttons - Enhanced for double cards */}
-                <div className={`flex gap-3 pt-4 ${isDoubleWide ? 'flex-col lg:flex-row' : ''}`}>
-                  <Button
-                    ref={(el) => cartButtonRefs.current[product.id] = el}
-                    onClick={(e) => handleAddToCart(product, e)}
-                    disabled={!product.inStock}
-                    className={`bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all duration-200 ${
-                      isDoubleWide 
-                        ? 'flex-1 h-14 lg:h-12 text-lg lg:text-base' 
-                        : 'flex-1 h-12'
-                    } ${
-                      animatingItems.has(product.id) ? 'cart-button-animating' : ''
-                    }`}
-                    data-testid={`add-to-cart-${product.id}`}
-                  >
-                    <Plus className={`mr-2 ${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'}`} />
-                    Add to Cart
-                  </Button>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (product.inStock) openOrderModal(product);
-                    }}
-                    disabled={!product.inStock}
-                    variant="outline"
-                    className={`border-2 border-black text-black hover:bg-black hover:text-white disabled:opacity-50 font-semibold ${
-                      isDoubleWide 
-                        ? 'flex-1 lg:px-6 h-14 lg:h-12 text-lg lg:text-base' 
-                        : 'px-6 h-12'
-                    }`}
-                    data-testid={`order-modal-${product.id}`}
-                  >
-                    <ShoppingBag className={`${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'}`} />
-                  </Button>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleFavorite(product.id);
-                    }}
-                    variant="outline"
-                    className={`border-2 font-semibold ${
-                      favorites.includes(product.id)
-                        ? 'bg-red-500 border-red-500 text-white hover:bg-red-600'
-                        : 'border-gray-300 text-gray-600 hover:border-red-500 hover:text-red-500'
-                    } ${
-                      isDoubleWide 
-                        ? 'flex-1 lg:px-6 h-14 lg:h-12 text-lg lg:text-base' 
-                        : 'px-6 h-12'
-                    }`}
-                    data-testid={`favorite-toggle-${product.id}`}
-                  >
-                    <Heart className={`${isDoubleWide ? 'w-5 h-5' : 'w-4 h-4'} ${favorites.includes(product.id) ? 'fill-current' : ''}`} />
-                  </Button>
-
                 </div>
               </div>
             </div>
-          );
-        })}
+          ))}
         </div>
       </div>
 
