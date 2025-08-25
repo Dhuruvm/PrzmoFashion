@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { log } from "./vite";
 import { readFileSync } from "fs";
 import { smtpManager } from "./smtp-manager";
 
@@ -70,9 +70,19 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    try {
+      const viteModule = await import("./vite");
+      await viteModule.setupVite(app, server);
+    } catch (error) {
+      console.log("Vite setup failed, continuing without frontend dev server:", error.message);
+    }
   } else {
-    serveStatic(app);
+    try {
+      const viteModule = await import("./vite");
+      viteModule.serveStatic(app);
+    } catch (error) {
+      console.log("Static serve failed, continuing with API only:", error.message);
+    }
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
